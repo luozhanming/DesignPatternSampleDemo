@@ -16,4 +16,8 @@ public class MainActivity extends AppCompatActivity {
     public void factory(View view) {
         SampleActivity.start(this, SampleActivity.FACTORY,((Button)view).getText().toString());
     }
+
+    public void abstractFactory(View view) {
+        SampleActivity.start(this, SampleActivity.ABSTRACT_FACTORY,((Button)view).getText().toString());
+    }
 }

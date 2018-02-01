@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import org.reactivestreams.Subscription;
-
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -19,14 +17,18 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import luozm.designpatternsampledemo.abstractfactory.Attack;
+import luozm.designpatternsampledemo.abstractfactory.Defence;
+import luozm.designpatternsampledemo.abstractfactory.MonsterFactory;
 import luozm.designpatternsampledemo.factory.Fighter;
 import luozm.designpatternsampledemo.factory.FighterFactory;
 
 public class SampleActivity extends AppCompatActivity {
 
     public static final int FACTORY = 1;
+    public static final int ABSTRACT_FACTORY = 2;
 
-    @IntDef({FACTORY})
+    @IntDef({FACTORY,ABSTRACT_FACTORY})
     public @interface Pattern {
     }
 
@@ -61,7 +63,23 @@ public class SampleActivity extends AppCompatActivity {
             case FACTORY:
                 showFactoryPower();
                 break;
+            case ABSTRACT_FACTORY:
+                showAbstractFactoryPower();
+                break;
         }
+    }
+
+    private void showAbstractFactoryPower() {
+        luozm.designpatternsampledemo.abstractfactory.FighterFactory fighterFactory = new luozm.designpatternsampledemo.abstractfactory.FighterFactory();
+        Attack attack1 = fighterFactory.produceAttack();
+        Defence defence1 = fighterFactory.produceDefence();
+        logger.append(attack1.attack()+"\n");
+        logger.append(defence1.defend()+"\n");
+        MonsterFactory monsterFactory = new MonsterFactory();
+        Attack attack2 = monsterFactory.produceAttack();
+        Defence defence2 = monsterFactory.produceDefence();
+        logger.append(attack2.attack()+"\n");
+        logger.append(defence2.defend()+"\n");
     }
 
     /**
