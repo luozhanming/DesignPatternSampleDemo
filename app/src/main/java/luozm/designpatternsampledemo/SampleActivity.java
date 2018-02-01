@@ -17,9 +17,14 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import luozm.designpatternsampledemo.abstractfactory.AbstractFactory;
 import luozm.designpatternsampledemo.abstractfactory.Attack;
 import luozm.designpatternsampledemo.abstractfactory.Defence;
 import luozm.designpatternsampledemo.abstractfactory.MonsterFactory;
+import luozm.designpatternsampledemo.adapter.AmericanAppliance;
+import luozm.designpatternsampledemo.adapter.ApplianceAdapter;
+import luozm.designpatternsampledemo.adapter.ChineseAppliance;
+import luozm.designpatternsampledemo.adapter.GeneralAppliance;
 import luozm.designpatternsampledemo.factory.Fighter;
 import luozm.designpatternsampledemo.factory.FighterFactory;
 
@@ -27,8 +32,9 @@ public class SampleActivity extends AppCompatActivity {
 
     public static final int FACTORY = 1;
     public static final int ABSTRACT_FACTORY = 2;
+    public static final int ADAPTER = 3;
 
-    @IntDef({FACTORY,ABSTRACT_FACTORY})
+    @IntDef({FACTORY,ABSTRACT_FACTORY,ADAPTER})
     public @interface Pattern {
     }
 
@@ -66,11 +72,35 @@ public class SampleActivity extends AppCompatActivity {
             case ABSTRACT_FACTORY:
                 showAbstractFactoryPower();
                 break;
+            case ADAPTER:
+                showAdapterPower();
+                break;
         }
     }
 
+
+    /**
+     * 适配器模式<br>
+     * 场景:美国电器用110V电，中国电器用220V电，做一个适配器，使得美国电器可以用220V电，中国电器用110V电
+     *
+     * */
+    private void showAdapterPower() {
+        //美国电器用220V电
+        GeneralAppliance _220V = new ApplianceAdapter(new AmericanAppliance(),220);
+        String s1 = _220V.use();
+        logger.append(s1+"\n");
+        //中国电器用110V电
+        GeneralAppliance _110 = new ApplianceAdapter(new ChineseAppliance(),110);
+        String s2 = _110.use();
+        logger.append(s2+"\n");
+    }
+
+    /**
+     * 场景:模拟抽象工厂模式。有两个工厂：怪兽工厂和战士工厂，两个工厂均可生产攻击和防御型。
+     *
+     * */
     private void showAbstractFactoryPower() {
-        luozm.designpatternsampledemo.abstractfactory.FighterFactory fighterFactory = new luozm.designpatternsampledemo.abstractfactory.FighterFactory();
+        AbstractFactory fighterFactory = new luozm.designpatternsampledemo.abstractfactory.FighterFactory();
         Attack attack1 = fighterFactory.produceAttack();
         Defence defence1 = fighterFactory.produceDefence();
         logger.append(attack1.attack()+"\n");

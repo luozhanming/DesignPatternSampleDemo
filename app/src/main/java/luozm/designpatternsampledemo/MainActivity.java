@@ -20,4 +20,8 @@ public class MainActivity extends AppCompatActivity {
     public void abstractFactory(View view) {
         SampleActivity.start(this, SampleActivity.ABSTRACT_FACTORY,((Button)view).getText().toString());
     }
+
+    public void adapter(View view){
+        SampleActivity.start(this, SampleActivity.ADAPTER,((Button)view).getText().toString());
+    }
 }
