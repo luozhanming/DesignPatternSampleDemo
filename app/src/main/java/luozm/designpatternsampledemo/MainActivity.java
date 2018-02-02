@@ -28,4 +28,8 @@ public class MainActivity extends AppCompatActivity {
     public void bridge(View view){
         SampleActivity.start(this, SampleActivity.BRIDGE,((Button)view).getText().toString());
     }
+
+    public void filter(View view){
+        SampleActivity.start(this, SampleActivity.FILTER,((Button)view).getText().toString());
+    }
 }

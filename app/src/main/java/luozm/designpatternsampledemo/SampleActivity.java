@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -33,6 +35,10 @@ import luozm.designpatternsampledemo.bridge.Hero;
 import luozm.designpatternsampledemo.bridge.WetNurse;
 import luozm.designpatternsampledemo.factory.Fighter;
 import luozm.designpatternsampledemo.factory.FighterFactory;
+import luozm.designpatternsampledemo.filter.Card;
+import luozm.designpatternsampledemo.filter.MagicCard;
+import luozm.designpatternsampledemo.filter.MonsterCard;
+import luozm.designpatternsampledemo.filter.MonsterCardFilter;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -40,8 +46,9 @@ public class SampleActivity extends AppCompatActivity {
     public static final int ABSTRACT_FACTORY = 2;
     public static final int ADAPTER = 3;
     public static final int BRIDGE = 4;
+    public static final int FILTER = 5;
 
-    @IntDef({FACTORY, ABSTRACT_FACTORY, ADAPTER, BRIDGE})
+    @IntDef({FACTORY, ABSTRACT_FACTORY, ADAPTER, BRIDGE, FILTER})
     public @interface Pattern {
     }
 
@@ -85,7 +92,33 @@ public class SampleActivity extends AppCompatActivity {
             case BRIDGE:
                 showBridgePower();
                 break;
+            case FILTER:
+                showFilterPower();
+                break;
         }
+    }
+
+    private void showFilterPower() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(new MonsterCard("青眼白龙",3000,2500));
+        cards.add(new MonsterCard("黑魔导士",2500,2000));
+        cards.add(new MonsterCard("妖精剑士",1400,1000));
+        cards.add(new MonsterCard("时间魔术师",500,300));
+        cards.add(new MagicCard("神奇羽毛扫",MagicCard.TYPE_NORMAL));
+        cards.add(new MagicCard("神圣加隆炮",MagicCard.TYPE_SUSTAINABILITY));
+        StringBuffer sb = new StringBuffer();
+        logger.append("原卡片集合:\n");
+        for (Card card : cards) {
+            logger.append(card.getName()+"-");
+        }
+        logger.append("\n经过怪兽卡过滤器后:\n");
+        MonsterCardFilter monsterCardFilter = new MonsterCardFilter();
+        monsterCardFilter.filter(cards);
+        for (Card card : cards) {
+            logger.append(card.getName()+"-");
+        }
+
+
     }
 
     /**
@@ -119,7 +152,7 @@ public class SampleActivity extends AppCompatActivity {
         //中国电器用110V电
         Appliance aappliance1 = new ChineseAppliance();
         String s4 = aappliance1.use220V();
-        logger.append(s3 + "\n");
+        logger.append(s4 + "\n");
         GeneralAppliance _110 = new ApplianceAdapter(aappliance1, 110);
         String s2 = _110.use();
         logger.append(s2 + "\n");
