@@ -24,4 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public void adapter(View view){
         SampleActivity.start(this, SampleActivity.ADAPTER,((Button)view).getText().toString());
     }
+
+    public void bridge(View view){
+        SampleActivity.start(this, SampleActivity.BRIDGE,((Button)view).getText().toString());
+    }
 }
