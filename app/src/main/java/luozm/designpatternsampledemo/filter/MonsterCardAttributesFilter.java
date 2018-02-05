@@ -1,5 +1,6 @@
 package luozm.designpatternsampledemo.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,20 +18,23 @@ public class MonsterCardAttributesFilter implements CardFilter {
 
     @Override
     public List<Card> filter(List<Card> cards) {
+        List<Card> result = new ArrayList<>();
+        result.addAll(cards);
         int minAttack = attributes[0];
         int maxAttack = attributes[1];
         int minDefense = attributes[2];
         int maxDefense = attributes[3];
-        for (Card card : cards) {
+        for (int i=0,size=cards.size();i<size;i++) {
+            Card card = cards.get(i);
             if (card instanceof MonsterCard) {
                 MonsterCard temp = (MonsterCard) card;
                 if (temp.getAttack() < minAttack || temp.getAttack() > maxAttack || temp.getDefence() < minDefense || temp.getDefence() > maxDefense) {
-                    cards.remove(card);
+                    result.remove(card);
                 }
             } else {
-                cards.remove(cards);
+                result.remove(card);
             }
         }
-        return cards;
+        return result;
     }
 }

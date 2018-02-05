@@ -16,7 +16,7 @@ public class MonsterCardFilter implements CardFilter {
         for (int i=0,size = cards.size();i<size;i++) {
             Card card = cards.get(i);
             if(!(card instanceof MonsterCard)){
-                result.remove(i);
+                result.remove(card);
             }
         }
         return result;

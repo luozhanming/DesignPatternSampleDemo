@@ -21,8 +21,11 @@ public class MultiOrCardFilter implements CardFilter {
     @Override
     public List<Card> filter(List<Card> cards) {
         List<Card> result = new ArrayList<>();
+        List<Card> temp = new ArrayList<>();
+        temp.addAll(cards);
         for (CardFilter filter : filters) {
-            result.addAll(filter.filter(cards));
+            temp = filter.filter(cards);
+            result.addAll(temp);
         }
         return result;
     }

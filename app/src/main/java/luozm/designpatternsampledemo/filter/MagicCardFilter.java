@@ -1,5 +1,6 @@
 package luozm.designpatternsampledemo.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,11 +10,15 @@ import java.util.List;
 public class MagicCardFilter implements CardFilter {
     @Override
     public List<Card> filter(List<Card> cards) {
-        for (Card card : cards) {
+        List<Card> result = new ArrayList<>();
+        result.addAll(cards);
+
+        for (int i=0,size = cards.size();i<size;i++) {
+            Card card = cards.get(i);
             if(!(card instanceof MagicCard)){
-                cards.remove(card);
+                result.remove(card);
             }
         }
-        return cards;
+        return result;
     }
 }

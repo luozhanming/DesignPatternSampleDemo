@@ -36,9 +36,15 @@ import luozm.designpatternsampledemo.bridge.WetNurse;
 import luozm.designpatternsampledemo.factory.Fighter;
 import luozm.designpatternsampledemo.factory.FighterFactory;
 import luozm.designpatternsampledemo.filter.Card;
+import luozm.designpatternsampledemo.filter.CardFilter;
+import luozm.designpatternsampledemo.filter.MagicCarTypeFilter;
 import luozm.designpatternsampledemo.filter.MagicCard;
+import luozm.designpatternsampledemo.filter.MagicCardFilter;
 import luozm.designpatternsampledemo.filter.MonsterCard;
+import luozm.designpatternsampledemo.filter.MonsterCardAttributesFilter;
 import luozm.designpatternsampledemo.filter.MonsterCardFilter;
+import luozm.designpatternsampledemo.filter.MultiAndCardFilter;
+import luozm.designpatternsampledemo.filter.MultiOrCardFilter;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -100,25 +106,42 @@ public class SampleActivity extends AppCompatActivity {
 
     private void showFilterPower() {
         List<Card> cards = new ArrayList<>();
-        cards.add(new MonsterCard("青眼白龙",3000,2500));
-        cards.add(new MonsterCard("黑魔导士",2500,2000));
-        cards.add(new MonsterCard("妖精剑士",1400,1000));
-        cards.add(new MonsterCard("时间魔术师",500,300));
-        cards.add(new MagicCard("神奇羽毛扫",MagicCard.TYPE_NORMAL));
-        cards.add(new MagicCard("神圣加隆炮",MagicCard.TYPE_SUSTAINABILITY));
+        cards.add(new MonsterCard("青眼白龙", 3000, 2500));
+        cards.add(new MonsterCard("黑魔导士", 2500, 2000));
+        cards.add(new MonsterCard("妖精剑士", 1400, 1000));
+        cards.add(new MonsterCard("时间魔术师", 500, 300));
+        cards.add(new MagicCard("神奇羽毛扫", MagicCard.TYPE_NORMAL));
+        cards.add(new MagicCard("神圣加隆炮", MagicCard.TYPE_SUSTAINABILITY));
         StringBuffer sb = new StringBuffer();
         logger.append("原卡片集合:\n");
         for (Card card : cards) {
-            logger.append(card.getName()+"-");
+            logger.append(card.getName() + "-");
         }
         logger.append("\n经过怪兽卡过滤器后:\n");
-        MonsterCardFilter monsterCardFilter = new MonsterCardFilter();
-        monsterCardFilter.filter(cards);
-        for (Card card : cards) {
-            logger.append(card.getName()+"-");
+        CardFilter filter1 = new MonsterCardFilter();
+        List<Card> result1 = filter1.filter(cards);
+        for (Card card : result1) {
+            logger.append(card.getName() + "-");
         }
-
-
+        logger.append("\n经过魔法卡过滤器后:\n");
+        CardFilter filter2 = new MagicCardFilter();
+        List<Card> result2 = filter2.filter(cards);
+        for (Card card : result2) {
+            logger.append(card.getName() + "-");
+        }
+        logger.append("\n经过普通魔法卡过滤器过滤后:\n");
+        CardFilter filter3 = new MultiAndCardFilter(filter2, new MagicCarTypeFilter(MagicCard.TYPE_NORMAL));
+        List<Card> result3 = filter3.filter(cards);
+        for (Card card : result3) {
+            logger.append(card.getName() + "-");
+        }
+        logger.append("\n经过怪兽卡属性或过滤器过滤后:\n");
+        CardFilter filter4 = new MultiOrCardFilter(new MonsterCardAttributesFilter(3000, 4000, 0, 2500)
+                , new MonsterCardAttributesFilter(0, 600, 0, 600));
+        List<Card> result4 = filter4.filter(cards);
+        for (Card card : result4) {
+            logger.append(card.getName() + "-");
+        }
     }
 
     /**

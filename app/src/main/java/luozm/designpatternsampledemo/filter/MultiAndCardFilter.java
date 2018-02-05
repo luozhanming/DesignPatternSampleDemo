@@ -20,11 +20,12 @@ public class MultiAndCardFilter implements CardFilter {
 
     @Override
     public List<Card> filter(List<Card> cards) {
+        List<Card> temp = new ArrayList<>();
+        temp.addAll(cards);
         for (CardFilter filter : filters) {
-            for (Card card : cards) {
-                filter.filter(cards);
-            }
+            temp = filter.filter(temp);
+
         }
-        return cards;
+        return temp;
     }
 }
