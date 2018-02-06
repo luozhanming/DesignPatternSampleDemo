@@ -33,6 +33,17 @@ import luozm.designpatternsampledemo.bridge.Cure;
 import luozm.designpatternsampledemo.bridge.DragonTail;
 import luozm.designpatternsampledemo.bridge.Hero;
 import luozm.designpatternsampledemo.bridge.WetNurse;
+import luozm.designpatternsampledemo.chainofresponsibility.James;
+import luozm.designpatternsampledemo.chainofresponsibility.PanLoader;
+import luozm.designpatternsampledemo.chainofresponsibility.Thomas;
+import luozm.designpatternsampledemo.chainofresponsibility.Tyronn;
+import luozm.designpatternsampledemo.composite.Branch;
+import luozm.designpatternsampledemo.composite.Component;
+import luozm.designpatternsampledemo.composite.Leaf;
+import luozm.designpatternsampledemo.decoration.ExAttack;
+import luozm.designpatternsampledemo.decoration.IHero;
+import luozm.designpatternsampledemo.decoration.ThunderAttack;
+import luozm.designpatternsampledemo.decoration.ZhaoYun;
 import luozm.designpatternsampledemo.factory.Fighter;
 import luozm.designpatternsampledemo.factory.FighterFactory;
 import luozm.designpatternsampledemo.filter.Card;
@@ -53,8 +64,11 @@ public class SampleActivity extends AppCompatActivity {
     public static final int ADAPTER = 3;
     public static final int BRIDGE = 4;
     public static final int FILTER = 5;
+    public static final int COMPOSITE = 6;
+    public static final int DECORATION = 7;
+    public static final int CHAIN_OF_RESPONSIBILITY = 8;
 
-    @IntDef({FACTORY, ABSTRACT_FACTORY, ADAPTER, BRIDGE, FILTER})
+    @IntDef({FACTORY, ABSTRACT_FACTORY, ADAPTER, BRIDGE, FILTER, COMPOSITE, DECORATION,CHAIN_OF_RESPONSIBILITY})
     public @interface Pattern {
     }
 
@@ -101,9 +115,86 @@ public class SampleActivity extends AppCompatActivity {
             case FILTER:
                 showFilterPower();
                 break;
+            case COMPOSITE:
+                showCompositePower();
+                break;
+            case DECORATION:
+                showDecorationPower();
+                break;
+            case CHAIN_OF_RESPONSIBILITY:
+                showChainOfResponsiblityPower();
+                break;
         }
     }
 
+    private void showChainOfResponsiblityPower() {
+        PanLoader tyronn = new Tyronn(PanLoader.COACH);
+        PanLoader james = new James(PanLoader.SCORE);
+        PanLoader thomas = new Thomas(PanLoader.DEFENSE);
+
+        tyronn.setNextPanLoader(james);
+        james.setNextPanLoader(thomas);
+
+        logger.append("执教不力\n");
+        logger.append(tyronn.findRealPanLoader(PanLoader.COACH)+"\n");
+        logger.append("得分划水\n");
+        logger.append(tyronn.findRealPanLoader(PanLoader.SCORE)+"\n");
+        logger.append("防守黑洞\n");
+        logger.append(tyronn.findRealPanLoader(PanLoader.DEFENSE)+"\n");
+        logger.append("对手太强\n");
+        logger.append(tyronn.findRealPanLoader(-1)+"\n");
+
+
+
+    }
+
+    /**
+     * 装饰器模式
+     * 场景：模拟三国无双赵云普通攻击，Ex普通攻击,雷属性Ex普通攻击
+     */
+    private void showDecorationPower() {
+        IHero zhaoyun = new ZhaoYun();
+        logger.append(zhaoyun.attack()+"\n");
+        zhaoyun = new ExAttack(zhaoyun);
+        logger.append(zhaoyun.attack()+"\n");
+        zhaoyun = new ThunderAttack(zhaoyun);
+        logger.append(zhaoyun.attack()+"\n");
+    }
+
+    /**
+     * 合成模式
+     * 场景：阿里巴巴集团的公司结构
+     */
+    private void showCompositePower() {
+        Branch compony = new Branch("阿里巴巴");
+        Branch compony1 = new Branch("蚂蚁金服");
+        Branch compony2 = new Branch("淘宝");
+        Branch compony3 = new Branch("天猫");
+        compony.add(compony1);
+        compony.add(compony2);
+        compony2.add(compony3);
+        Leaf leaf = new Leaf("支付宝");
+        Leaf leaf1 = new Leaf("蚂蚁借呗");
+        Leaf leaf3 = new Leaf("大疆无人机旗舰店");
+        compony1.add(leaf);
+        compony1.add(leaf1);
+        compony3.add(leaf3);
+        List<Component> all = compony.getAllSubComponent();
+        logger.append("阿里巴巴的下线公司有:\n");
+        logger.append(all.toString() + "\n");
+        logger.append("蚂蚁金服的下线公司有:\n");
+        logger.append(compony1.getAllSubComponent().toString() + "\n");
+        logger.append("淘宝的下线公司有:\n");
+        logger.append(compony2.getAllSubComponent().toString() + "\n");
+        logger.append("天猫的下线公司有:\n");
+        logger.append(compony3.getAllSubComponent().toString() + "\n");
+
+    }
+
+    /**
+     * 过滤器模式
+     * 场景：通过不同过滤器类可以筛选不同条件的卡片
+     */
     private void showFilterPower() {
         List<Card> cards = new ArrayList<>();
         cards.add(new MonsterCard("青眼白龙", 3000, 2500));
